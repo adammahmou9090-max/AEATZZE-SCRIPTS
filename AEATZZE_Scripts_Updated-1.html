@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>AEATZZE Scripts</title>
+<style>
+:root{color-scheme:dark;--bg:#070d18;--panel:#0d1829;--panel2:#101f34;--line:#203754;--blue:#2684ff;--cyan:#62c8ff;--muted:#91a6c1;--white:#edf5ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#12315b 0,transparent 42%),var(--bg);color:var(--white);font:15px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#14243a;color:var(--white);border-radius:12px;padding:11px 15px;font-weight:650}button:active{transform:scale(.98)}button.primary{background:linear-gradient(120deg,#1768dc,#269bff);border:0;color:white}button.ghost{background:transparent}button.danger{color:#ff9caa;border-color:#603044}
+.wrap{max-width:1050px;margin:auto;padding:22px 16px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px}.brand{display:flex;align-items:center;gap:11px}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#1678ff,#60d4ff);display:grid;place-items:center;color:#061326;font-weight:1000;font-size:19px;box-shadow:0 8px 30px #1678ff44}.brand h1{font-size:18px;margin:0;letter-spacing:.8px}.brand small{color:var(--muted)}
+.hello{padding:23px;border:1px solid #24476d;border-radius:20px;background:linear-gradient(115deg,#102744,#0c1829 65%);margin-bottom:18px}.hello h2{font-size:clamp(23px,5vw,32px);margin:0 0 7px}.hello p{color:#a9bfd9;margin:0}.hello span{color:#66c6ff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}.card h3{margin:0 0 15px;font-size:17px}.field{display:grid;gap:7px;margin-bottom:12px}.field label{color:#a9bfd9;font-size:13px}.field input,.field textarea,.field select{width:100%;border:1px solid #294361;background:#071321;color:var(--white);border-radius:11px;padding:12px;outline:none}.field input:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2684ff22}.field textarea{min-height:180px;resize:vertical;font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}
+.actions{display:flex;gap:9px;flex-wrap:wrap}.list{display:grid;gap:10px}.script{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px;border:1px solid var(--line);background:#091524;border-radius:13px}.script .info{min-width:0}.script strong{display:block;overflow-wrap:anywhere}.script small{color:var(--muted)}.script button{padding:9px 11px;white-space:nowrap}.empty{color:var(--muted);text-align:center;padding:26px 10px;border:1px dashed #294361;border-radius:13px}
+.viewer{display:none;margin-top:16px}.viewer.show{display:block}.codebox{white-space:pre-wrap;overflow-wrap:anywhere;background:#050b13;border:1px solid #233a55;border-radius:13px;padding:15px;max-height:55vh;overflow:auto;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#173b2e;border:1px solid #2e8b65;color:#c9ffe7;padding:11px 16px;border-radius:30px;transition:.25s;z-index:30;max-width:90vw;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+.loading{position:fixed;inset:0;background:#050b14;display:grid;place-items:center;z-index:50;transition:opacity .3s}.loading.hide{opacity:0;pointer-events:none}.loadinner{text-align:center}.spinner{width:43px;height:43px;border:4px solid #203754;border-top-color:#45a7ff;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 15px}@keyframes spin{to{transform:rotate(360deg)}}.loadinner b{letter-spacing:2px}.subtle{font-size:12px;color:var(--muted);margin-top:16px}
+@media(max-width:720px){.wrap{padding:14px 12px 40px}.grid{grid-template-columns:1fr}.top{margin-bottom:17px}.hello{padding:19px}.card{padding:15px}.script{align-items:flex-start}.script .actions{justify-content:flex-end}.script button{padding:9px 10px}.field textarea{min-height:160px}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="loadinner"><div class="spinner"></div><b>AEATZZE SCRIPTS</b><div class="subtle">Loading your workspace...</div></div></div>
+<div class="wrap">
+<header class="top"><div class="brand"><div class="logo">A</div><div><h1>AEATZZE SCRIPTS</h1><small>Personal script library</small></div></div><button class="ghost" id="refreshBtn">Refresh</button></header>
+<section class="hello"><h2>Hello<span id="helloName">, Creator</span> 👋</h2><p>Your scripts, organized in one place. Create, open, edit and copy them from phone or PC.</p></section>
+<div class="grid">
+<section class="card"><h3 id="formTitle">＋ Add a script</h3>
+<div class="field"><label for="scriptName">Script name</label><input id="scriptName" maxlength="70" placeholder="Example: My UI Script"></div>
+<div class="field"><label for="scriptCategory">Category</label><input id="scriptCategory" maxlength="40" placeholder="General"></div>
+<div class="field"><label for="scriptCode">Code</label><textarea id="scriptCode" spellcheck="false" placeholder="Paste or write your code here..."></textarea></div>
+<div class="actions"><button class="primary" id="saveBtn">Save script</button><button class="ghost" id="clearBtn">Clear</button></div>
+<div class="subtle">Saved on this browser for now. Cloud sync will be connected after Supabase setup.</div>
+</section>
+<section class="card"><h3>My scripts <span id="count" style="color:#69c8ff">(0)</span></h3><div class="list" id="scriptList"><div class="empty">Loading scripts...</div></div></section>
+</div>
+<section class="card viewer" id="viewer"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:13px"><h3 id="viewTitle" style="margin:0">Script</h3><div class="actions"><button class="primary" id="copyViewBtn">Copy code</button><button class="ghost" id="closeViewBtn">Close</button></div></div><pre class="codebox" id="viewCode"></pre></section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const $=id=>document.getElementById(id);
+let scripts=[], editingId=null;
+const KEY='aeatzze_scripts_v2';
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2200)}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'[]');scripts=Array.isArray(v)?v:[]}catch(e){scripts=[]}render()}
+function persist(){localStorage.setItem(KEY,JSON.stringify(scripts));render()}
+function render(){
+ $('count').textContent=`(${scripts.length})`;
+ const list=$('scriptList');list.innerHTML='';
+ if(!scripts.length){list.innerHTML='<div class="empty">No scripts yet. Add your first one.</div>';return}
+ scripts.forEach(s=>{
+  const row=document.createElement('div');row.className='script';
+  const info=document.createElement('div');info.className='info';
+  const name=document.createElement('strong');name.textContent=s.name;
+  const meta=document.createElement('small');meta.textContent=s.category||'General';
+  info.append(name,meta);
+  const acts=document.createElement('div');acts.className='actions';
+  const open=document.createElement('button');open.textContent='Open';open.onclick=()=>showScript(s.id);
+  const copy=document.createElement('button');copy.textContent='Copy';copy.onclick=()=>copyText(s.code);
+  const edit=document.createElement('button');edit.textContent='Edit';edit.onclick=()=>editScript(s.id);
+  acts.append(open,copy,edit);row.append(info,acts);list.append(row);
+ });
+}
+function clearForm(){editingId=null;$('scriptName').value='';$('scriptCategory').value='';$('scriptCode').value='';$('formTitle').textContent='＋ Add a script';$('saveBtn').textContent='Save script'}
+function save(){
+ const name=$('scriptName').value.trim(),code=$('scriptCode').value;
+ if(!name||!code.trim()){toast('Add a script name and code first');return}
+ const category=$('scriptCategory').value.trim()||'General';
+ if(editingId){const s=scripts.find(x=>x.id===editingId);if(s)Object.assign(s,{name,category,code});toast('Script updated')}
+ else{scripts.unshift({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random())),name,category,code});toast('Script saved')}
+ persist();clearForm();
+}
+function showScript(id){const s=scripts.find(x=>x.id===id);if(!s)return;$('viewTitle').textContent=s.name;$('viewCode').textContent=s.code;$('viewer').classList.add('show');$('viewer').scrollIntoView({behavior:'smooth',block:'start'});$('copyViewBtn').onclick=()=>copyText(s.code)}
+function editScript(id){const s=scripts.find(x=>x.id===id);if(!s)return;editingId=id;$('scriptName').value=s.name;$('scriptCategory').value=s.category||'';$('scriptCode').value=s.code;$('formTitle').textContent='Edit script';$('saveBtn').textContent='Update script';window.scrollTo({top:0,behavior:'smooth'})}
+async function copyText(text){
+ // Clipboard API works on secure contexts; fallback supports mobile browsers and older desktop browsers.
+ try{
+  if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);toast('Copied successfully');return}
+ }catch(e){}
+ try{
+  const area=document.createElement('textarea');area.value=text;area.setAttribute('readonly','');
+  area.style.position='fixed';area.style.top='0';area.style.left='-9999px';area.style.opacity='0';
+  document.body.appendChild(area);area.focus();area.select();area.setSelectionRange(0,area.value.length);
+  const ok=document.execCommand('copy');area.remove();
+  if(ok){toast('Copied successfully');return}
+ }catch(e){}
+ // Last-resort mobile fallback: show selectable code so the user can use the system Copy menu.
+ const area=document.createElement('textarea');area.value=text;area.style.width='100%';area.style.minHeight='140px';area.style.position='fixed';area.style.inset='auto 0 0';area.style.zIndex='100';area.style.background='#071321';area.style.color='white';area.style.padding='18px';area.style.border='2px solid #2684ff';area.readOnly=true;
+ document.body.appendChild(area);area.focus();area.select();area.setSelectionRange(0,text.length);toast('Select the code, then choose Copy');setTimeout(()=>area.remove(),12000);
+}
+$('saveBtn').onclick=save;$('clearBtn').onclick=clearForm;$('closeViewBtn').onclick=()=>$('viewer').classList.remove('show');
+$('refreshBtn').onclick=()=>{load();toast('Workspace refreshed')};
+load();
+setTimeout(()=>$('loading').classList.add('hide'),650);
+</script>
+</body>
+</html>
